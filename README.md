@@ -1,4 +1,5 @@
 StudentResultManagmentPortal
+
 A comprehensive web-based portal for managing student results with role-based authentication and secure access control. Built with modern technologies for educational institutions. ✨ Features 🔐 Role-Based Authentication
 
 Students: View personal results only (secure access) Teachers: Full CRUD operations on all student results Admin: System oversight with login monitoring
