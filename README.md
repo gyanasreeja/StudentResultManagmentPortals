@@ -25,6 +25,23 @@ Additional Tools
 Pydantic - Data validation using Python type hints Hashlib - Secure password hashing CORS middleware - Cross-origin resource sharing HOME PAGE: image Student Dashboard image Teacher Dashboard image Admin DashBoard image Access the application
 
 Frontend: http://localhost:3000 Backend API: http://localhost:8000 API Documentation: http://localhost:8000/docs
+  Home Page:
+  <img width="1889" height="888" alt="Screenshot 2025-09-18 194006" src="https://github.com/user-attachments/assets/0b58d220-25e3-4ff8-89a4-c445b7ac96cf" />
+   
+  Student Dashboard:
+  <img width="1906" height="861" alt="Screenshot 2025-09-18 194112" src="https://github.com/user-attachments/assets/435cb163-03ba-47b0-ab0d-b8ea0cf6b1d8" />
+  Teacher Dashboard:
+  <img width="1854" height="876" alt="Screenshot 2025-09-18 194159" src="https://github.com/user-attachments/assets/6f605099-17e0-46ab-a31a-2e340a37b864" />
+
+  <img width="1902" height="873" alt="Screenshot 2025-09-18 122607" src="https://github.com/user-attachments/assets/f17bec75-956a-4285-809e-936a1d176d2f" />
+  Admin Dashbaord:
+  <img width="1865" height="879" alt="Screenshot 2025-09-18 194259" src="https://github.com/user-attachments/assets/ac52ea6e-aba5-40c1-9253-a1886ca95e94" />
+
+  
+
+
+
+
 
 👥 Default Login Credentials Students
 
