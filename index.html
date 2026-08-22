@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABC College - Result Portal</title>
+    <title>Meridian University - Result Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -22,7 +22,7 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <header class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 text-center">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">ABC College</h1>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Meridian University</h1>
             <p class="text-gray-600 text-lg">Student Result Management Portal</p>
         </header>
 
@@ -76,6 +76,14 @@
             <div id="studentResults" class="space-y-4">
                 <!-- Student results will be loaded here -->
             </div>
+
+            <!-- AI Recommendations -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold mb-4">📊 Performance Analysis & Recommendations</h3>
+                <div id="aiRecommendations" class="bg-purple-50 p-4 rounded-lg">
+                    <p class="text-gray-500">Loading recommendations...</p>
+                </div>
+            </div>
         </div>
 
         <!-- Teacher Dashboard -->
@@ -94,6 +102,19 @@
                     <input type="text" id="subject" placeholder="Subject" required class="px-4 py-2 border rounded-lg">
                     <input type="number" id="marks" placeholder="Marks" required class="px-4 py-2 border rounded-lg">
                     <button type="submit" class="bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg col-span-2">Add/Update Result</button>
+                </form>
+            </div>
+
+            <!-- Add Topic-wise Marks -->
+            <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                <h3 class="text-lg font-semibold mb-4">Add Topic-wise Marks</h3>
+                <form id="topicResultForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="topicRollNo" placeholder="Roll Number" required class="px-4 py-2 border rounded-lg">
+                    <input type="text" id="topicSubject" placeholder="Subject" required class="px-4 py-2 border rounded-lg">
+                    <input type="text" id="topicName" placeholder="Topic (e.g. Trigonometry)" required class="px-4 py-2 border rounded-lg">
+                    <input type="number" id="topicMarks" placeholder="Marks obtained" required class="px-4 py-2 border rounded-lg">
+                    <input type="number" id="topicMaxMarks" placeholder="Max marks" required class="px-4 py-2 border rounded-lg">
+                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg col-span-2">Add Topic Marks</button>
                 </form>
             </div>
 
@@ -219,6 +240,7 @@ function showDashboard(role) {
 async function loadData() {
     if (currentRole === 'student') {
         await loadStudentResults();
+        await loadRecommendations();
     } else if (currentRole === 'teacher') {
         await loadAllResults();
     } else if (currentRole === 'admin') {
@@ -255,6 +277,37 @@ async function loadStudentResults() {
     } catch (error) {
         console.error('Error loading student results:', error); // Debug log
         document.getElementById('studentResults').innerHTML = '<p class="text-red-500">Error loading results. Check console for details.</p>';
+    }
+}
+
+// Student: Load AI-generated performance recommendations
+async function loadRecommendations() {
+    const container = document.getElementById('aiRecommendations');
+    container.innerHTML = '<p class="text-gray-500">Analyzing performance... (first request may take 10-20s)</p>';
+    try {
+        const response = await fetch(`${API_BASE}/ai/recommendations/${currentUser.user_id}`);
+        const data = await response.json();
+
+        let weakAreasHtml = '';
+        if (data.weak_areas && data.weak_areas.length > 0) {
+            weakAreasHtml = '<div class="mb-3 space-y-2">' + data.weak_areas.map(w => `
+                <div class="bg-white p-3 rounded-lg flex justify-between items-center">
+                    <span><strong>${w.subject}</strong> — ${w.topic}</span>
+                    <span class="text-red-600 font-semibold">${w.score_pct}%</span>
+                </div>
+            `).join('') + '</div>';
+        }
+
+        container.innerHTML = `
+            ${weakAreasHtml}
+            <div class="bg-white p-4 rounded-lg">
+                <p class="text-sm text-gray-500 mb-1">AI Recommendation:</p>
+                <p class="text-gray-800">${data.recommendation}</p>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Error loading recommendations:', error);
+        container.innerHTML = '<p class="text-red-500">Could not load recommendations. Check console for details.</p>';
     }
 }
 
@@ -357,6 +410,33 @@ document.getElementById('resultForm').addEventListener('submit', async (e) => {
         }
     } catch (error) {
         alert('Error adding result');
+    }
+});
+
+// Teacher: Add topic-wise marks
+document.getElementById('topicResultForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+        student_roll: document.getElementById('topicRollNo').value,
+        subject: document.getElementById('topicSubject').value,
+        topic: document.getElementById('topicName').value,
+        marks: parseFloat(document.getElementById('topicMarks').value),
+        max_marks: parseFloat(document.getElementById('topicMaxMarks').value)
+    };
+    try {
+        const response = await fetch(`${API_BASE}/topic-results`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            alert('Topic marks added!');
+            e.target.reset();
+        } else {
+            alert('Error adding topic marks');
+        }
+    } catch (error) {
+        alert('Error adding topic marks');
     }
 });
 

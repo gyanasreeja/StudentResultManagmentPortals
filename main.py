@@ -9,9 +9,10 @@ from typing import List, Optional
 import hashlib
 from fastapi.responses import FileResponse
 import os
+from ai_recommend import detect_weak_topics, generate_recommendation
 
 # Database Configuration
-DATABASE_URL = "postgresql://postgres:ROOT@localhost/student_portal_db"
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:postgre123@127.0.0.1:5432/student_portal_db")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -51,6 +52,17 @@ class Result(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+class TopicResult(Base):
+    __tablename__ = "topic_results"
+
+    id = Column(Integer, primary_key=True, index=True)
+    student_roll = Column(String, index=True)
+    subject = Column(String)
+    topic = Column(String)
+    marks = Column(Float)
+    max_marks = Column(Float)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
 
 class LoginLog(Base):
     __tablename__ = "login_logs"
@@ -77,6 +89,22 @@ class ResultCreate(BaseModel):
     student_name: str
     subject: str
     marks: float
+class TopicResultCreate(BaseModel):
+    student_roll: str
+    subject: str
+    topic: str
+    marks: float
+    max_marks: float
+
+
+class TopicResultResponse(BaseModel):
+    id: int
+    student_roll: str
+    subject: str
+    topic: str
+    marks: float
+    max_marks: float
+    created_at: datetime    
 
 
 class ResultUpdate(BaseModel):
@@ -184,6 +212,38 @@ async def get_student_results(student_roll: str, db: Session = Depends(get_db)):
 async def get_all_results(db: Session = Depends(get_db)):
     results = db.query(Result).all()
     return results
+@app.post("/topic-results", response_model=TopicResultResponse)
+async def create_topic_result(result: TopicResultCreate, db: Session = Depends(get_db)):
+    existing = db.query(TopicResult).filter(
+        TopicResult.student_roll == result.student_roll,
+        TopicResult.subject == result.subject,
+        TopicResult.topic == result.topic
+    ).first()
+
+    if existing:
+        existing.marks = result.marks
+        existing.max_marks = result.max_marks
+        db.commit()
+        db.refresh(existing)
+        return existing
+    else:
+        db_result = TopicResult(**result.dict())
+        db.add(db_result)
+        db.commit()
+        db.refresh(db_result)
+        return db_result
+
+
+@app.get("/topic-results/student/{student_roll}", response_model=List[TopicResultResponse])
+async def get_student_topic_results(student_roll: str, db: Session = Depends(get_db)):
+    results = db.query(TopicResult).filter(TopicResult.student_roll == student_roll).all()
+    return results
+
+
+@app.get("/topic-results/all", response_model=List[TopicResultResponse])
+async def get_all_topic_results(db: Session = Depends(get_db)):
+    results = db.query(TopicResult).all()
+    return results
 
 
 @app.post("/results", response_model=ResultResponse)
@@ -229,8 +289,25 @@ async def get_login_logs(db: Session = Depends(get_db)):
 async def health_check():
     return {"status": "OK", "message": "Student Result Management Portal API"}
 
+@app.get("/ai/recommendations/{student_roll}")
+async def get_recommendations(student_roll: str, db: Session = Depends(get_db)):
+    topic_results = db.query(TopicResult).filter(TopicResult.student_roll == student_roll).all()
+    if not topic_results:
+        return {"weak_areas": [], "recommendation": "No topic-wise results found yet."}
+
+    results_data = [
+        {"subject": t.subject, "topic": t.topic, "marks": t.marks, "max_marks": t.max_marks}
+        for t in topic_results
+    ]
+    weak_areas = detect_weak_topics(results_data)
+    recommendation = generate_recommendation(student_roll, weak_areas)
+
+    return {"weak_areas": weak_areas, "recommendation": recommendation}
+
+
 
 if __name__ == "__main__":
     import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
+    
