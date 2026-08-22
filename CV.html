@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gyanasreeja Patnala - Resume</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.2;
+            color: #000;
+            background-color: #fff;
+            font-size: 10pt;
+        }
+
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+            background: white;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .name {
+            font-size: 20pt;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #000;
+        }
+
+        .contact-line {
+            font-size: 10pt;
+            margin-bottom: 2px;
+        }
+
+        .social-links {
+            font-size: 10pt;
+            margin-top: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #0066cc;
+            transform: translateY(-1px);
+        }
+
+        .social-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #000;
+            border-bottom: 1px solid #000;
+            padding-bottom: 1px;
+        }
+
+        /* Experience, Education, Projects */
+        .item {
+            margin-bottom: 12px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2px;
+        }
+
+        .left-info {
+            flex: 1;
+        }
+
+        .right-info {
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .position, .degree, .project-name {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+
+        .company, .institution {
+            font-style: italic;
+            font-size: 11pt;
+        }
+
+        .location {
+            font-size: 11pt;
+        }
+
+        .date {
+            font-size: 11pt;
+            font-weight: bold;
+        }
+
+        .description {
+            margin-top: 4px;
+            margin-left: 0;
+        }
+
+        .description ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .description li {
+            margin-bottom: 2px;
+            font-size: 11pt;
+        }
+
+        .tools {
+            font-weight: bold;
+            margin-top: 2px;
+            font-size: 11pt;
+        }
+
+        .project-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 10pt;
+            margin-top: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .intern-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 10pt;
+            margin-top: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .project-link:hover,
+        .intern-link:hover {
+            color: #004499;
+            text-decoration: underline;
+        }
+
+        .project-icon {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Skills */
+        .skills-content {
+            font-size: 11pt;
+        }
+
+        .skill-category {
+            margin-bottom: 8px;
+        }
+
+        .skill-category span {
+            font-weight: bold;
+        }
+
+        /* Achievements */
+        .achievement {
+            margin-bottom: 4px;
+            font-size: 11pt;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5in;
+                max-width: 100%;
+            }
+
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .right-info {
+                text-align: left;
+                margin-top: 2px;
+            }
+
+            .name {
+                font-size: 20pt;
+            }
+
+            .social-links a {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                margin: 2px 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.3in;
+            }
+
+            .name {
+                font-size: 18pt;
+            }
+
+            .section-title {
+                font-size: 12pt;
+            }
+
+            body {
+                font-size: 10pt;
+            }
+
+            .position, .degree, .project-name,
+            .company, .institution, .location, .date,
+            .description li, .tools, .project-link, .intern-link,
+            .skills-content, .achievement {
+                font-size: 10pt;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                font-size: 10pt;
+                line-height: 1.1;
+            }
+
+            .container {
+                max-width: none;
+                padding: 0.4in;
+                margin: 0;
+            }
+
+            .social-links a,
+            .project-link,
+            .intern-link {
+                color: #000 !important;
+                text-decoration: underline !important;
+            }
+
+            .section {
+                margin-bottom: 8px;
+            }
+
+            .item {
+                margin-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="name">Gyanasreeja Patnala</div>
+            <div class="contact-line">9100368770 | gyanasreeja2004@gmail.com</div>
+            <div class="social-links">
+                <a href="https://github.com/gyanasreeja" target="_blank">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    gyanasreeja
+                </a>
+                <a href="https://www.linkedin.com/in/gyanasreeja-patnala-ab196b259" target="_blank">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    gyanasreeja
+                </a>
+            </div>
+            <div class="contact-line">Visakhapatnam, Andhra Pradesh - 530016, India</div>
+        </div>
+
+        <!-- Objective -->
+        <div class="section">
+            <div class="section-title">Objective</div>
+            <div>Entry-level Python Developer skilled in Python, FastAPI, and SQL with hands-on project experience in ML, web development, and database management. Seeking to contribute to scalable applications and grow with an innovative tech team</div>
+        </div>
+
+        <!-- Experience -->
+        <div class="section">
+            <div class="section-title">Experience</div>
+            <div class="item">
+                <div class="item-header">
+                    <div class="left-info">
+                        <div class="position">Intern</div>
+                        <div class="company">Miracle Software Systems</div>
+                        <div class="location">Visakhapatnam, India</div>
+                    </div>
+                    <div class="right-info">
+                        <div class="date">May 2025 – July 2025</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>Built a full stack project for student result management.</li>
+                        <li>Created RESTful APIs and backend services with FastAPI.</li>
+                        <li>Used PyMySQL for database connectivity and CRUD operations.</li>
+                        <li>Designed responsive UI using HTML, CSS, JavaScript, and ReactJS.</li>
+                    </ul>
+                    <a href="https://github.com/gyanasreeja/StudentResultManagmentPortals" class="intern-link" target="_blank">
+                        <svg class="project-icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub Repository
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="section">
+            <div class="section-title">Education</div>
+            <div class="item">
+                <div class="item-header">
+                    <div class="left-info">
+                        <div class="degree">B.Tech in Information Technology</div>
+                        <div class="institution">Anil Neerukonda Institution of Technology and Sciences</div>
+                        <div class="location">Visakhapatnam, India</div>
+                    </div>
+                    <div class="right-info">
+                        <div class="date">2021 – 2025</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>GPA: 8.11/10.00</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="item-header">
+                    <div class="left-info">
+                        <div class="degree">Intermediate (MPC)</div>
+                        <div class="institution">Narayana College</div>
+                        <div class="location">Visakhapatnam, India</div>
+                    </div>
+                    <div class="right-info">
+                        <div class="date">2019 – 2021</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>Grade: 78%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="item-header">
+                    <div class="left-info">
+                        <div class="degree">Secondary School Certificate (SSC)</div>
+                        <div class="institution">Sri Chaitanya Techno School</div>
+                        <div class="location">Visakhapatnam, India</div>
+                    </div>
+                    <div class="right-info">
+                        <div class="date">2018 – 2019</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>GPA: 9.7/10</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="section">
+            <div class="section-title">Projects</div>
+
+            <div class="item">
+                <div class="item-header">
+                    <div class="left-info">
+                        <div class="project-name">Placement Prediction and Analysis Using ML</div>
+                        <div class="tools">Tools: Python, Scikit-learn, MongoDB, Flask, ReactJS</div>
+                    </div>
+                    <div class="right-info">
+                        <div class="date">Feb 2025 – Mar 2025</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>Built a system to predict student employability using Logistic Regression, Random Forest, and XGBoost.</li>
+                        <li>Placement Prediction project achieved 95% accuracy using XGBoost.</li>
+                        <li>Delivered visual insights for better placement decision-making.</li>
+                    </ul>
+                    <a href="https://github.com/gyanasreeja/Placement-Prediction-and-Analysis-Using-ML-" class="project-link" target="_blank">
+                        <svg class="project-icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub Repository
+                    </a>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="item-header">
+                    <div class="left-info">
+                        <div class="project-name">Hotel Management Application</div>
+                        <div class="tools">Tools: HTML, CSS, JavaScript, PHP, FastAPI</div>
+                    </div>
+                    <div class="right-info">
+                        <div class="date">Jan 2025</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>Designed a responsive hotel booking and management platform.</li>
+                        <li>Integrated backend logic for reservation handling and admin features.</li>
+                    </ul>
+                    <a href="https://github.com/gyanasreeja/StudentResultManagmentPortals" class="project-link" target="_blank">
+                        <svg class="project-icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub Repository
+                    </a>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="item-header">
+                    <div class="left-info">
+                        <div class="project-name">Swiggy – Swiggy-Inspired Food Delivery UI</div>
+                        <div class="tools">Tools: ReactJS, HTML, CSS</div>
+                    </div>
+                    <div class="right-info">
+                        <div class="date">July 2025</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>Developed a frontend UI clone of Swiggy using ReactJS.</li>
+                        <li>Created reusable components for menu, cart, and home screen.</li>
+                        <li>Ensured responsive design and smooth UX for food delivery layout.</li>
+                    </ul>
+                    <a href="https://github.com/gyanasreeja/Swiggy-React" class="project-link" target="_blank">
+                        <svg class="project-icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub Repository
+                    </a>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="item-header">
+                    <div class="left-info">
+                        <div class="project-name">Netflix Data ETL</div>
+                        <div class="tools">Tools: Python, Azure Data Factory, Azure Data Lake</div>
+                    </div>
+                    <div class="right-info">
+                        <div class="date">2025</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <ul>
+                        <li>Built ETL pipeline for Netflix dataset processing and analysis.</li>
+                        <li>Utilized Azure services for scalable data processing.</li>
+                    </ul>
+                    <a href="https://github.com/gyanasreeja/netflix" class="project-link" target="_blank">
+                        <svg class="project-icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub Repository
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="section">
+            <div class="section-title">Skills</div>
+            <div class="skills-content">
+                <div class="skill-category">
+                    <span>Programming Languages:</span> Python (Core Advanced), DSA, OOPS, C
+                </div>
+                <div class="skill-category">
+                    <span>Web Technologies:</span> ReactJS, HTML, CSS, JavaScript
+                </div>
+                <div class="skill-category">
+                    <span>Database:</span> MySQL, Oracle PL/SQL,
+                </div>
+                <div class="skill-category">
+                    <span>Cloud:</span> Azure (Data Factory, Data Lake)
+                </div>
+                <div class="skill-category">
+                    <span>Tools:</span> VS Code, Git
+                </div>
+                <div class="skill-category">
+                    <span>Networking:</span> Networking Basics, Network Configuration & Troubleshooting Routing and Switching Basics
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="section">
+            <div class="section-title">Achievements</div>
+            <div class="achievement">Certified in Python and Problem Solving on HackerRank.</div>
+            <div class="achievement">Ranked 193 (Institution) & 53,902 (Global) on GeeksforGeeks with a score of 220.</div>
+        </div>
+    </div>
+</body>
+</html>
