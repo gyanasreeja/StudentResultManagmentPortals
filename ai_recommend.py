@@ -1,4 +1,3 @@
-import math
 import os
 
 # --- LLM setup: Groq (cloud, free tier) for generation ---
@@ -12,34 +11,22 @@ llm = ChatGroq(
     temperature=0.4,
 )
 
-# --- Embeddings setup: HuggingFace hosted Inference API (no local model, no torch, low memory) ---
-import requests
+# --- Retrieval setup: no embeddings, no external API — simple word-overlap matching ---
+# Since our knowledge base is small and indexed by (subject, topic), a lightweight
+# keyword-overlap score reliably finds the right entry without needing a vector DB,
+# an embedding model, or any external network call — which also avoids memory and
+# network-reliability issues on free hosting tiers.
 
-HF_TOKEN = os.environ.get("HF_TOKEN", "")
-HF_EMBED_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
-
-
-def _embed_texts(texts):
-    """Call HF's hosted embedding API. Returns a list of vectors, one per input text."""
-    response = requests.post(
-        HF_EMBED_URL,
-        headers={"Authorization": f"Bearer {HF_TOKEN}"},
-        json={"inputs": texts, "options": {"wait_for_model": True}},
-        timeout=30,
-    )
-    response.raise_for_status()
-    return response.json()
+def _tokenize(text):
+    return set(text.lower().replace(",", " ").replace(".", " ").split())
 
 
-class _RemoteEmbeddings:
-    def embed_documents(self, texts):
-        return _embed_texts(texts)
-
-    def embed_query(self, text):
-        return _embed_texts([text])[0]
-
-
-embeddings = _RemoteEmbeddings()
+def _overlap_score(query_text, candidate_text):
+    query_words = _tokenize(query_text)
+    candidate_words = _tokenize(candidate_text)
+    if not query_words or not candidate_words:
+        return 0
+    return len(query_words & candidate_words)
 
 # --- Topic knowledge base (expand this over time) ---
 TOPIC_RESOURCES = [
@@ -91,30 +78,16 @@ TOPIC_RESOURCES = [
                 "Practice identifying the poet's message and explaining difficult lines in simple words."},
 ]
 
-# Pre-compute embeddings for the knowledge base once at startup.
-# This is the "index" in a simple hand-rolled RAG pipeline (no vector DB needed
-# for a small, fixed knowledge base like this one).
-_kb_texts = [r["content"] for r in TOPIC_RESOURCES]
-_kb_vectors = embeddings.embed_documents(_kb_texts)
-
-
-def _cosine_similarity(vec_a, vec_b):
-    dot = sum(a * b for a, b in zip(vec_a, vec_b))
-    norm_a = math.sqrt(sum(a * a for a in vec_a))
-    norm_b = math.sqrt(sum(b * b for b in vec_b))
-    if norm_a == 0 or norm_b == 0:
-        return 0.0
-    return dot / (norm_a * norm_b)
+# Knowledge base is queried directly at lookup time — no pre-computation needed.
 
 
 def _retrieve_best_match(query_text):
-    query_vector = embeddings.embed_query(query_text)
     scored = [
-        (_cosine_similarity(query_vector, kb_vec), resource)
-        for kb_vec, resource in zip(_kb_vectors, TOPIC_RESOURCES)
+        (_overlap_score(query_text, f"{r['subject']} {r['topic']} {r['content']}"), r)
+        for r in TOPIC_RESOURCES
     ]
     scored.sort(key=lambda pair: pair[0], reverse=True)
-    return scored[0][1] if scored else None
+    return scored[0][1] if scored and scored[0][0] > 0 else None
 
 
 def detect_weak_topics(topic_results, threshold=0.6):
