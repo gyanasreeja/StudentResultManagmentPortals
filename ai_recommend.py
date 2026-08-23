@@ -12,10 +12,34 @@ llm = ChatGroq(
     temperature=0.4,
 )
 
-# --- Embeddings setup: local HuggingFace model (no API key, no network call needed) ---
-from langchain_huggingface import HuggingFaceEmbeddings
+# --- Embeddings setup: HuggingFace hosted Inference API (no local model, no torch, low memory) ---
+import requests
 
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+HF_TOKEN = os.environ.get("HF_TOKEN", "")
+HF_EMBED_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+
+
+def _embed_texts(texts):
+    """Call HF's hosted embedding API. Returns a list of vectors, one per input text."""
+    response = requests.post(
+        HF_EMBED_URL,
+        headers={"Authorization": f"Bearer {HF_TOKEN}"},
+        json={"inputs": texts, "options": {"wait_for_model": True}},
+        timeout=30,
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+class _RemoteEmbeddings:
+    def embed_documents(self, texts):
+        return _embed_texts(texts)
+
+    def embed_query(self, text):
+        return _embed_texts([text])[0]
+
+
+embeddings = _RemoteEmbeddings()
 
 # --- Topic knowledge base (expand this over time) ---
 TOPIC_RESOURCES = [

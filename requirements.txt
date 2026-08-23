@@ -4,5 +4,4 @@ sqlalchemy
 psycopg2-binary
 pydantic
 langchain-groq
-langchain-huggingface
-sentence-transformers
+requests
