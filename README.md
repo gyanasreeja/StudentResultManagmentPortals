@@ -80,3 +80,6 @@ Paperless System - Reduce manual paperwork Instant Access - Students get results
 🔒 Security Considerations
 
 Password Hashing: SHA-256 encryption for all passwords Role Validation: Server-side role verification for all endpoints Data Isolation: Students can only access their own data Input Validation: Comprehensive data validation using Pydantic SQL Injection Protection: SQLAlchemy ORM prevents SQL injection CORS Configuration: Controlled cross-origin resource sharing
+
+<img width="5929" height="6728" alt="diagram" src="https://github.com/user-attachments/assets/a17a9459-d464-485a-ab95-13041ab08135" />
+
