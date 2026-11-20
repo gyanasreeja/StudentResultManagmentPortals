@@ -1,11 +1,9 @@
 fastapi
 uvicorn
-sqlalchemy
+sqlalchemy>=2.0,<2.1
 psycopg2-binary
 pydantic
 bcrypt
 PyJWT
 python-dotenv
 langchain-groq
-langchain-huggingface
-sentence-transformers

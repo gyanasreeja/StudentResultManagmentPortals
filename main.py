@@ -31,6 +31,10 @@ log = logging.getLogger("portal")
 DATABASE_URL = os.environ.get(
     "DATABASE_URL", "postgresql://postgres:postgres@127.0.0.1:5432/student_portal_db"
 )
+if DATABASE_URL.startswith("postgres://"):  # Render/Heroku style -> SQLAlchemy style
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+if DATABASE_URL.startswith("postgresql://"):  # force the psycopg2 driver we install
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
 JWT_SECRET = os.environ.get("JWT_SECRET")
 if not JWT_SECRET:
     JWT_SECRET = secrets.token_urlsafe(48)
@@ -267,16 +271,18 @@ def result_out(r: Result) -> ResultOut:
 
 # ---------------------------------------------------------------- app
 def seed(db: Session) -> None:
-    if db.query(User).count() > 0:
-        return
-    users = [User(user_id="A001", password=hash_password(ADMIN_PASSWORD), role="admin", name="Admin User")]
+    """Make sure the default accounts exist (checked one by one, not only on an empty DB)."""
+    defaults = [("A001", ADMIN_PASSWORD, "admin", "Admin User")]
     if SEED_DEMO:
-        users += [
-            User(user_id="T001", password=hash_password("Teach@123"), role="teacher", name="Prof. Johnson"),
-            User(user_id="S001", password=hash_password("Pass@1234"), role="student", name="John Doe"),
-            User(user_id="S002", password=hash_password("Pass@1234"), role="student", name="Jane Smith"),
+        defaults += [
+            ("T001", "Teach@123", "teacher", "Prof. Johnson"),
+            ("S001", "Pass@1234", "student", "John Doe"),
+            ("S002", "Pass@1234", "student", "Jane Smith"),
         ]
-    db.add_all(users)
+    existing = {u for (u,) in db.query(User.user_id).all()}
+    for uid, pw, role, name in defaults:
+        if uid not in existing:
+            db.add(User(user_id=uid, password=hash_password(pw), role=role, name=name))
     db.commit()
 
 
