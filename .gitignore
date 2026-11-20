@@ -1,0 +1,5 @@
+.env
+seed_credentials*.csv
+first_year_credentials.csv
+venv/
+__pycache__/

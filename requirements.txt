@@ -3,4 +3,9 @@ uvicorn
 sqlalchemy
 psycopg2-binary
 pydantic
+bcrypt
+PyJWT
+python-dotenv
 langchain-groq
+langchain-huggingface
+sentence-transformers

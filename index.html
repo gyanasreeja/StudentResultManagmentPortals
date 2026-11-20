@@ -1,477 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meridian University - Result Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian University - Result Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#12263f;--ink2:#1d3a5f;--accent:#8c1d2f;--bg:#f2f4f8;--card:#fff;--line:#d9dee7;--muted:#5b6778;--ok:#1f7a4d;--bad:#b3261e}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Source Sans 3',system-ui,sans-serif;background:var(--bg);color:#1b2433;line-height:1.5}
+h1,h2,h3{font-family:'Source Serif 4',Georgia,serif;color:var(--ink)}
+.hidden{display:none!important}
+.top{background:var(--ink);color:#fff;border-bottom:4px solid var(--accent)}
+.top .in{max-width:1080px;margin:auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:'Source Serif 4',serif;font-size:1.35rem;font-weight:700}
+.brand small{display:block;font:400 .8rem 'Source Sans 3';opacity:.75}
+.who{font-size:.9rem;display:flex;gap:12px;align-items:center}
+main{max-width:1080px;margin:28px auto;padding:0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:24px;margin-bottom:20px}
+.auth{max-width:440px;margin:40px auto}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:20px}
+.tabs button{flex:1;background:none;border:0;padding:10px;font:600 1rem inherit;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent}
+.tabs button.on{color:var(--ink);border-color:var(--accent)}
+label{display:block;font-size:.85rem;font-weight:600;margin:12px 0 4px;color:var(--ink2)}
+input,select{width:100%;padding:10px 12px;border:1px solid #b9c1ce;border-radius:4px;font:inherit;background:#fff}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--ink2);outline-offset:1px}
+.btn{background:var(--ink);color:#fff;border:0;border-radius:4px;padding:10px 18px;font:600 .95rem inherit;cursor:pointer}
+.btn:hover{background:var(--ink2)}.btn.acc{background:var(--accent)}.btn.ghost{background:transparent;color:#fff;border:1px solid #fff6}
+.btn.sm{padding:5px 10px;font-size:.8rem}.btn.del{background:var(--bad)}.btn.lt{background:#e8ecf3;color:var(--ink)}
+.btn.full{width:100%;margin-top:18px}
+.msg{padding:10px 12px;border-radius:4px;margin-top:14px;font-size:.9rem}
+.msg.err{background:#fbeae9;color:var(--bad)}.msg.ok{background:#e6f4ec;color:var(--ok)}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));align-items:end}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);padding:14px 16px;border-radius:6px}
+.stat b{display:block;font:700 1.7rem 'Source Serif 4',serif;color:var(--ink)}.stat span{font-size:.85rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th{text-align:left;background:#eef1f6;color:var(--ink2);padding:9px 10px;border-bottom:2px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line)}
+.wrap{overflow-x:auto}
+.pill{display:inline-block;padding:1px 9px;border-radius:12px;font-size:.78rem;font-weight:600;background:#e8ecf3;color:var(--ink)}
+.pill.ok{background:#e6f4ec;color:var(--ok)}.pill.bad{background:#fbeae9;color:var(--bad)}
+.ai{border-left:4px solid var(--ink2);background:#f6f8fc}
+.weak{display:flex;justify-content:space-between;padding:8px 12px;background:#fff;border:1px solid var(--line);border-radius:4px;margin-bottom:6px}
+.empty{color:var(--muted);text-align:center;padding:18px}
+h2{font-size:1.35rem;margin-bottom:14px}h3{font-size:1.1rem;margin-bottom:10px}
+.hint{font-size:.8rem;color:var(--muted);margin-top:12px}
+@media(max-width:600px){main{margin-top:16px}.card{padding:16px}}
+@media(prefers-reduced-motion:no-preference){.card{transition:box-shadow .2s}}
+</style>
 </head>
-<body class="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 min-h-screen">
-    <!-- Main Container -->
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <header class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-8 text-center">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">Meridian University</h1>
-            <p class="text-gray-600 text-lg">Student Result Management Portal</p>
-        </header>
+<body>
+<header class="top"><div class="in">
+  <div class="brand">Meridian University<small>Student Result Management Portal</small></div>
+  <div class="who hidden" id="who"><span id="whoText"></span><button class="btn ghost sm" onclick="logout()">Sign out</button></div>
+</div></header>
 
-        <!-- Home Page -->
-        <div id="homePage" class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Select Your Role</h2>
-            <div class="flex flex-wrap justify-center gap-6">
-                <button onclick="showLogin('student')" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    Student
-                </button>
-                <button onclick="showLogin('teacher')" class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    Teacher
-                </button>
-                <button onclick="showLogin('admin')" class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    Admin
-                </button>
-            </div>
-        </div>
+<main>
+<!-- AUTH -->
+<section id="authView" class="card auth">
+  <div class="tabs"><button id="tabLogin" class="on" onclick="authTab('login')">Sign in</button><button id="tabReg" onclick="authTab('register')">Student registration</button></div>
 
-        <!-- Login Form -->
-        <div id="loginForm" class="hidden bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="loginTitle" class="text-2xl font-bold text-gray-800"></h2>
-                <button onclick="showHome()" class="text-gray-600 hover:text-gray-800">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <form id="authForm" class="space-y-4">
-                <div>
-                    <label id="userIdLabel" class="block text-sm font-medium text-gray-700 mb-2"></label>
-                    <input type="text" id="userId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-all duration-300">
-                    Login
-                </button>
-            </form>
-        </div>
+  <form id="loginForm">
+    <label for="lRole">Sign in as</label>
+    <select id="lRole"><option value="student">Student</option><option value="teacher">Teacher</option><option value="admin">Administrator</option></select>
+    <label for="lId" id="lIdLabel">Roll number</label><input id="lId" required autocomplete="username">
+    <label for="lPw">Password</label><input id="lPw" type="password" required autocomplete="current-password">
+    <button class="btn full" type="submit">Sign in</button>
+  </form>
 
-        <!-- Student Dashboard -->
-        <div id="studentDashboard" class="hidden bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Student Dashboard</h2>
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
-            </div>
-            <div id="studentResults" class="space-y-4">
-                <!-- Student results will be loaded here -->
-            </div>
+  <form id="regForm" class="hidden">
+    <label for="rName">Full name</label><input id="rName" required minlength="2" autocomplete="name">
+    <label for="rId">Roll number</label><input id="rId" required minlength="3" pattern="[A-Za-z0-9_.\-]+" autocomplete="username">
+    <label for="rPw">Password</label><input id="rPw" type="password" required minlength="8" maxlength="72" autocomplete="new-password">
+    <label for="rPw2">Confirm password</label><input id="rPw2" type="password" required autocomplete="new-password">
+    <p class="hint">At least 8 characters, with letters and numbers. Teacher and admin accounts are created by an administrator.</p>
+    <button class="btn full acc" type="submit">Create student account</button>
+  </form>
+  <div id="authMsg"></div>
+</section>
 
-            <!-- AI Recommendations -->
-            <div class="mt-8">
-                <h3 class="text-lg font-semibold mb-4">📊 Performance Analysis & Recommendations</h3>
-                <div id="aiRecommendations" class="bg-purple-50 p-4 rounded-lg">
-                    <p class="text-gray-500">Loading recommendations...</p>
-                </div>
-            </div>
-        </div>
+<!-- STUDENT -->
+<section id="studentView" class="hidden">
+  <div class="stats" id="studentStats"></div>
+  <div class="card"><h2>My results</h2><div class="wrap" id="studentResults"></div></div>
+  <div class="card ai"><h2>Performance analysis</h2><div id="aiBox" class="empty">Loading…</div></div>
+</section>
 
-        <!-- Teacher Dashboard -->
-        <div id="teacherDashboard" class="hidden bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Teacher Dashboard</h2>
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
-            </div>
+<!-- TEACHER -->
+<section id="teacherView" class="hidden">
+  <div class="card"><h2>Add or update a result</h2>
+    <form id="resultForm" class="grid">
+      <div><label for="tRoll">Roll number</label><input id="tRoll" required></div>
+      <div><label for="tSubject">Subject</label><input id="tSubject" required></div>
+      <div><label for="tMarks">Marks (0-100)</label><input id="tMarks" type="number" min="0" max="100" step="0.5" required></div>
+      <button class="btn" type="submit">Save result</button>
+    </form>
+    <p class="hint">The student must already be registered. Saving the same roll and subject again updates the marks.</p>
+  </div>
+  <div class="card"><h2>Topic-wise marks (feeds the AI advisor)</h2>
+    <form id="topicForm" class="grid">
+      <div><label for="pRoll">Roll number</label><input id="pRoll" required></div>
+      <div><label for="pSubject">Subject</label><input id="pSubject" required placeholder="e.g. Math"></div>
+      <div><label for="pTopic">Topic</label><input id="pTopic" required placeholder="e.g. Trigonometry"></div>
+      <div><label for="pMarks">Marks obtained</label><input id="pMarks" type="number" min="0" step="0.5" required></div>
+      <div><label for="pMax">Maximum marks</label><input id="pMax" type="number" min="1" step="0.5" required></div>
+      <button class="btn acc" type="submit">Save topic marks</button>
+    </form>
+  </div>
+  <div id="teacherMsg"></div>
+  <div class="card"><h2>All results</h2><div class="wrap" id="teacherResults"></div></div>
+</section>
 
-            <!-- Add/Edit Result Form -->
-            <div class="bg-gray-50 p-6 rounded-lg mb-6">
-                <h3 class="text-lg font-semibold mb-4">Add/Update Student Result</h3>
-                <form id="resultForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="studentRollNo" placeholder="Roll Number" required class="px-4 py-2 border rounded-lg">
-                    <input type="text" id="studentName" placeholder="Student Name" required class="px-4 py-2 border rounded-lg">
-                    <input type="text" id="subject" placeholder="Subject" required class="px-4 py-2 border rounded-lg">
-                    <input type="number" id="marks" placeholder="Marks" required class="px-4 py-2 border rounded-lg">
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg col-span-2">Add/Update Result</button>
-                </form>
-            </div>
+<!-- ADMIN -->
+<section id="adminView" class="hidden">
+  <div class="stats" id="adminStats"></div>
+  <div class="card"><h2>Create a user</h2>
+    <form id="userForm" class="grid">
+      <div><label for="uRole">Role</label><select id="uRole"><option value="teacher">Teacher</option><option value="student">Student</option><option value="admin">Administrator</option></select></div>
+      <div><label for="uId">User ID</label><input id="uId" required minlength="3"></div>
+      <div><label for="uName">Full name</label><input id="uName" required></div>
+      <div><label for="uPw">Temporary password</label><input id="uPw" type="password" required minlength="8"></div>
+      <button class="btn" type="submit">Create user</button>
+    </form>
+  </div>
+  <div id="adminMsg"></div>
+  <div class="card"><h2>Users</h2><div class="wrap" id="userTable"></div></div>
+  <div class="card"><h2>Recent sign-in activity</h2><div class="wrap" id="logTable"></div></div>
+  <div class="card"><h2>All results</h2><div class="wrap" id="adminResults"></div></div>
+</section>
+</main>
 
-            <!-- Add Topic-wise Marks -->
-            <div class="bg-gray-50 p-6 rounded-lg mb-6">
-                <h3 class="text-lg font-semibold mb-4">Add Topic-wise Marks</h3>
-                <form id="topicResultForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="topicRollNo" placeholder="Roll Number" required class="px-4 py-2 border rounded-lg">
-                    <input type="text" id="topicSubject" placeholder="Subject" required class="px-4 py-2 border rounded-lg">
-                    <input type="text" id="topicName" placeholder="Topic (e.g. Trigonometry)" required class="px-4 py-2 border rounded-lg">
-                    <input type="number" id="topicMarks" placeholder="Marks obtained" required class="px-4 py-2 border rounded-lg">
-                    <input type="number" id="topicMaxMarks" placeholder="Max marks" required class="px-4 py-2 border rounded-lg">
-                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg col-span-2">Add Topic Marks</button>
-                </form>
-            </div>
+<script>
+const API = window.location.origin;           // frontend is served by FastAPI
+const store = {
+  get token(){ try{return sessionStorage.getItem('token')}catch{return null} },
+  set token(v){ try{ v? sessionStorage.setItem('token',v) : sessionStorage.removeItem('token') }catch{} }
+};
+let user = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate = d => new Date(d).toLocaleString();
 
-            <!-- All Students Results -->
-            <div id="allResults" class="space-y-4">
-                <!-- All results will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Admin Dashboard -->
-        <div id="adminDashboard" class="hidden bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
-            </div>
-
-            <!-- Login Logs -->
-            <div class="mb-8">
-                <h3 class="text-lg font-semibold mb-4">Login Activity</h3>
-                <div id="loginLogs" class="bg-gray-50 p-4 rounded-lg max-h-60 overflow-y-auto">
-                    <!-- Login logs will be displayed here -->
-                </div>
-            </div>
-
-            <!-- All Results View -->
-            <div>
-                <h3 class="text-lg font-semibold mb-4">All Student Results</h3>
-                <div id="adminResults" class="space-y-4">
-                    <!-- All results will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-       // frontend/js/main.js
-
-// API Base URL
-const API_BASE = window.location.origin;
-
-let currentUser = null;
-let currentRole = null;
-
-// Show different pages
-function showHome() {
-    hideAll();
-    document.getElementById('homePage').classList.remove('hidden');
+function note(el, text, ok){ $(el).innerHTML = text ? `<div class="msg ${ok?'ok':'err'}">${esc(text)}</div>` : ''; }
+function errText(d){
+  if (!d) return 'Something went wrong';
+  if (typeof d.detail === 'string') return d.detail;
+  if (Array.isArray(d.detail)) return d.detail.map(e => (e.loc||[]).slice(1).join('.') + ': ' + e.msg).join('; ');
+  return 'Something went wrong';
+}
+async function api(path, opts = {}){
+  const headers = {'Content-Type':'application/json', ...(opts.headers||{})};
+  if (store.token) headers.Authorization = 'Bearer ' + store.token;
+  const res = await fetch(API + path, {...opts, headers});
+  let data = null; try{ data = await res.json() }catch{}
+  if (res.status === 401 && store.token){ logout('Your session has ended. Please sign in again.'); throw new Error('Session ended'); }
+  if (!res.ok) throw new Error(errText(data));
+  return data;
 }
 
-function showLogin(role) {
-    hideAll();
-    currentRole = role;
-    document.getElementById('loginForm').classList.remove('hidden');
+/* ---------- auth ---------- */
+function authTab(t){
+  $('loginForm').classList.toggle('hidden', t!=='login'); $('regForm').classList.toggle('hidden', t!=='register');
+  $('tabLogin').classList.toggle('on', t==='login'); $('tabReg').classList.toggle('on', t==='register'); note('authMsg','');
+}
+const idLabels = {student:'Roll number', teacher:'Employee ID', admin:'Administrator ID'};
+$('lRole').addEventListener('change', e => $('lIdLabel').textContent = idLabels[e.target.value]);
 
-    const titles = {
-        student: 'Student Login',
-        teacher: 'Teacher Login',
-        admin: 'Admin Login'
-    };
-
-    const labels = {
-        student: 'Roll Number',
-        teacher: 'Employee ID',
-        admin: 'Admin ID'
-    };
-
-    document.getElementById('loginTitle').textContent = titles[role];
-    document.getElementById('userIdLabel').textContent = labels[role];
+$('loginForm').addEventListener('submit', async e => {
+  e.preventDefault(); note('authMsg','');
+  try{
+    const d = await api('/auth/login', {method:'POST', body: JSON.stringify({user_id:$('lId').value.trim(), password:$('lPw').value, role:$('lRole').value})});
+    store.token = d.access_token; user = d.user; e.target.reset(); enter();
+  }catch(err){ note('authMsg', err.message); }
+});
+$('regForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  if ($('rPw').value !== $('rPw2').value) return note('authMsg','Passwords do not match');
+  try{
+    await api('/auth/register', {method:'POST', body: JSON.stringify({user_id:$('rId').value.trim(), name:$('rName').value.trim(), password:$('rPw').value})});
+    e.target.reset(); authTab('login'); note('authMsg','Account created. You can sign in now.', true);
+  }catch(err){ note('authMsg', err.message); }
+});
+function logout(msg){
+  store.token = null; user = null;
+  ['studentView','teacherView','adminView','who'].forEach(i => $(i).classList.add('hidden'));
+  $('authView').classList.remove('hidden'); note('authMsg', msg||'', false);
+}
+function enter(){
+  $('authView').classList.add('hidden'); $('who').classList.remove('hidden');
+  $('whoText').textContent = `${user.name} (${user.role})`;
+  $(user.role + 'View').classList.remove('hidden');
+  ({student:loadStudent, teacher:loadTeacher, admin:loadAdmin})[user.role]();
 }
 
-function hideAll() {
-    const pages = ['homePage', 'loginForm', 'studentDashboard', 'teacherDashboard', 'adminDashboard'];
-    pages.forEach(page => {
-        document.getElementById(page).classList.add('hidden');
-    });
+/* ---------- shared renderers ---------- */
+const gradeClass = g => g==='F' ? 'bad' : (g==='A+'||g==='A') ? 'ok' : '';
+function resultsTable(rows, actions){
+  if (!rows.length) return '<div class="empty">No results recorded yet.</div>';
+  return `<table><thead><tr><th>Roll</th><th>Name</th><th>Subject</th><th>Marks</th><th>Grade</th><th>Updated</th>${actions?'<th></th>':''}</tr></thead><tbody>` +
+    rows.map(r => `<tr><td>${esc(r.student_roll)}</td><td>${esc(r.student_name)}</td><td>${esc(r.subject)}</td><td>${esc(r.marks)}</td>
+    <td><span class="pill ${gradeClass(r.grade)}">${esc(r.grade)}</span></td><td>${fmtDate(r.updated_at||r.created_at)}</td>
+    ${actions?`<td><button class="btn lt sm" data-edit="${r.id}">Edit</button> <button class="btn del sm" data-del="${r.id}">Delete</button></td>`:''}</tr>`).join('') + '</tbody></table>';
 }
 
-function logout() {
-    currentUser = null;
-    currentRole = null;
-    showHome();
+/* ---------- student ---------- */
+async function loadStudent(){
+  try{
+    const rows = await api('/results/student/' + encodeURIComponent(user.user_id));
+    const avg = rows.length ? (rows.reduce((s,r)=>s+r.marks,0)/rows.length).toFixed(1) : '-';
+    const best = rows.length ? rows.reduce((a,b)=>a.marks>=b.marks?a:b).subject : '-';
+    $('studentStats').innerHTML = `<div class="stat"><b>${rows.length}</b><span>Subjects</span></div><div class="stat"><b>${avg}</b><span>Average marks</span></div><div class="stat"><b>${esc(best)}</b><span>Strongest subject</span></div>`;
+    $('studentResults').innerHTML = resultsTable(rows, false);
+  }catch(e){ $('studentResults').innerHTML = `<div class="msg err">${esc(e.message)}</div>`; }
+  loadAI();
+}
+async function loadAI(){
+  $('aiBox').className = 'empty'; $('aiBox').textContent = 'Analysing your performance… the first request can take a few seconds.';
+  try{
+    const d = await api('/ai/recommendations/' + encodeURIComponent(user.user_id));
+    $('aiBox').className = '';
+    $('aiBox').innerHTML = (d.weak_areas||[]).map(w => `<div class="weak"><span><strong>${esc(w.subject)}</strong>: ${esc(w.topic)}</span><span class="pill bad">${esc(w.score_pct)}%</span></div>`).join('')
+      + `<p style="margin-top:10px">${esc(d.recommendation)}</p>`;
+  }catch(e){ $('aiBox').innerHTML = `<div class="msg err">${esc(e.message)}</div>`; }
 }
 
-// Authentication
-document.getElementById('authForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const userId = document.getElementById('userId').value;
-    const password = document.getElementById('password').value;
-
-    try {
-        const response = await fetch(`${API_BASE}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_id: userId,
-                password: password,
-                role: currentRole
-            })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            currentUser = data.user;
-            showDashboard(currentRole);
-            loadData();
-        } else {
-            alert(data.detail || 'Login failed');
-        }
-    } catch (error) {
-        alert('Login failed. Please check if backend is running on http://localhost:8000');
-    }
+/* ---------- teacher ---------- */
+let teacherRows = [];
+async function loadTeacher(){
+  try{
+    teacherRows = await api('/results/all');
+    $('teacherResults').innerHTML = resultsTable(teacherRows, true);
+  }catch(e){ note('teacherMsg', e.message); }
+}
+$('teacherResults').addEventListener('click', async e => {
+  const del = e.target.dataset.del, edit = e.target.dataset.edit;
+  if (edit){ const r = teacherRows.find(x => x.id == edit); $('tRoll').value=r.student_roll; $('tSubject').value=r.subject; $('tMarks').value=r.marks; $('tMarks').focus(); window.scrollTo({top:0,behavior:'smooth'}); }
+  if (del && confirm('Delete this result?')){
+    try{ await api('/results/' + del, {method:'DELETE'}); note('teacherMsg','Result deleted.',true); loadTeacher(); }catch(err){ note('teacherMsg', err.message); }
+  }
+});
+$('resultForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  try{
+    await api('/results', {method:'POST', body: JSON.stringify({student_roll:$('tRoll').value.trim(), subject:$('tSubject').value.trim(), marks:parseFloat($('tMarks').value)})});
+    note('teacherMsg','Result saved.',true); e.target.reset(); loadTeacher();
+  }catch(err){ note('teacherMsg', err.message); }
+});
+$('topicForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  try{
+    await api('/topic-results', {method:'POST', body: JSON.stringify({student_roll:$('pRoll').value.trim(), subject:$('pSubject').value.trim(), topic:$('pTopic').value.trim(), marks:parseFloat($('pMarks').value), max_marks:parseFloat($('pMax').value)})});
+    note('teacherMsg','Topic marks saved.',true); e.target.reset();
+  }catch(err){ note('teacherMsg', err.message); }
 });
 
-function showDashboard(role) {
-    hideAll();
-    document.getElementById(`${role}Dashboard`).classList.remove('hidden');
+/* ---------- admin ---------- */
+async function loadAdmin(){
+  try{
+    const [users, logs, results] = await Promise.all([api('/admin/users'), api('/admin/login-logs'), api('/results/all')]);
+    const c = r => users.filter(u => u.role===r).length;
+    $('adminStats').innerHTML = [['Students',c('student')],['Teachers',c('teacher')],['Administrators',c('admin')],['Results',results.length]].map(([l,n])=>`<div class="stat"><b>${n}</b><span>${l}</span></div>`).join('');
+    $('userTable').innerHTML = `<table><thead><tr><th>ID</th><th>Name</th><th>Role</th><th></th></tr></thead><tbody>` +
+      users.map(u => `<tr><td>${esc(u.user_id)}</td><td>${esc(u.name)}</td><td><span class="pill">${esc(u.role)}</span></td><td>${u.user_id===user.user_id?'':`<button class="btn del sm" data-uid="${u.id}">Remove</button>`}</td></tr>`).join('') + '</tbody></table>';
+    $('logTable').innerHTML = logs.length ? `<table><thead><tr><th>User</th><th>Role</th><th>Outcome</th><th>Time</th></tr></thead><tbody>` +
+      logs.map(l => `<tr><td>${esc(l.user_id)}</td><td>${esc(l.role)}</td><td><span class="pill ${l.success?'ok':'bad'}">${l.success?'Success':'Failed'}</span></td><td>${fmtDate(l.login_time)}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">No activity yet.</div>';
+    $('adminResults').innerHTML = resultsTable(results, false);
+  }catch(e){ note('adminMsg', e.message); }
 }
-
-// Load data based on role
-async function loadData() {
-    if (currentRole === 'student') {
-        await loadStudentResults();
-        await loadRecommendations();
-    } else if (currentRole === 'teacher') {
-        await loadAllResults();
-    } else if (currentRole === 'admin') {
-        await loadLoginLogs();
-        await loadAllResultsForAdmin();
-    }
-}
-
-// Student: Load own results
-async function loadStudentResults() {
-    try {
-        console.log('Loading results for student:', currentUser.user_id); // Debug log
-        const response = await fetch(`${API_BASE}/results/student/${currentUser.user_id}`);
-        const results = await response.json();
-
-        console.log('Student results received:', results); // Debug log
-
-        const container = document.getElementById('studentResults');
-        if (!results || results.length === 0) {
-            container.innerHTML = '<div class="bg-gray-50 p-4 rounded-lg text-center text-gray-600">No results found for your roll number</div>';
-            return;
-        }
-
-        container.innerHTML = results.map(result => `
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div><strong>Subject:</strong> ${result.subject}</div>
-                    <div><strong>Marks:</strong> ${result.marks}</div>
-                    <div><strong>Grade:</strong> ${getGrade(result.marks)}</div>
-                    <div><strong>Date:</strong> ${new Date(result.created_at).toLocaleDateString()}</div>
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        console.error('Error loading student results:', error); // Debug log
-        document.getElementById('studentResults').innerHTML = '<p class="text-red-500">Error loading results. Check console for details.</p>';
-    }
-}
-
-// Student: Load AI-generated performance recommendations
-async function loadRecommendations() {
-    const container = document.getElementById('aiRecommendations');
-    container.innerHTML = '<p class="text-gray-500">Analyzing performance... (first request may take 10-20s)</p>';
-    try {
-        const response = await fetch(`${API_BASE}/ai/recommendations/${currentUser.user_id}`);
-        const data = await response.json();
-
-        let weakAreasHtml = '';
-        if (data.weak_areas && data.weak_areas.length > 0) {
-            weakAreasHtml = '<div class="mb-3 space-y-2">' + data.weak_areas.map(w => `
-                <div class="bg-white p-3 rounded-lg flex justify-between items-center">
-                    <span><strong>${w.subject}</strong> — ${w.topic}</span>
-                    <span class="text-red-600 font-semibold">${w.score_pct}%</span>
-                </div>
-            `).join('') + '</div>';
-        }
-
-        container.innerHTML = `
-            ${weakAreasHtml}
-            <div class="bg-white p-4 rounded-lg">
-                <p class="text-sm text-gray-500 mb-1">AI Recommendation:</p>
-                <p class="text-gray-800">${data.recommendation}</p>
-            </div>
-        `;
-    } catch (error) {
-        console.error('Error loading recommendations:', error);
-        container.innerHTML = '<p class="text-red-500">Could not load recommendations. Check console for details.</p>';
-    }
-}
-
-// Teacher: Load all results and handle CRUD
-async function loadAllResults() {
-    try {
-        const response = await fetch(`${API_BASE}/results/all`);
-        const results = await response.json();
-
-        const container = document.getElementById('allResults');
-        if (results.length === 0) {
-            container.innerHTML = '<div class="bg-gray-50 p-4 rounded-lg text-center text-gray-600">No results found</div>';
-            return;
-        }
-
-        container.innerHTML = results.map(result => `
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
-                    <div><strong>Roll:</strong> ${result.student_roll}</div>
-                    <div><strong>Name:</strong> ${result.student_name}</div>
-                    <div><strong>Subject:</strong> ${result.subject}</div>
-                    <div><strong>Marks:</strong> ${result.marks}</div>
-                    <div class="flex gap-2">
-                        <button onclick="deleteResult(${result.id})" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Delete</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        document.getElementById('allResults').innerHTML = '<p class="text-red-500">Error loading results</p>';
-    }
-}
-
-// Admin: Load login logs
-async function loadLoginLogs() {
-    try {
-        const response = await fetch(`${API_BASE}/admin/login-logs`);
-        const logs = await response.json();
-
-        const container = document.getElementById('loginLogs');
-        container.innerHTML = logs.map(log => `
-            <div class="mb-2 p-2 bg-white rounded">
-                <span class="font-semibold">${log.user_id}</span> (${log.role}) -
-                <span class="text-gray-600">${new Date(log.login_time).toLocaleString()}</span>
-            </div>
-        `).join('');
-    } catch (error) {
-        document.getElementById('loginLogs').innerHTML = '<p class="text-red-500">Error loading logs</p>';
-    }
-}
-
-// Admin: Load all results (read-only)
-async function loadAllResultsForAdmin() {
-    try {
-        const response = await fetch(`${API_BASE}/results/all`);
-        const results = await response.json();
-
-        const container = document.getElementById('adminResults');
-        container.innerHTML = results.map(result => `
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div><strong>Roll:</strong> ${result.student_roll}</div>
-                    <div><strong>Name:</strong> ${result.student_name}</div>
-                    <div><strong>Subject:</strong> ${result.subject}</div>
-                    <div><strong>Marks:</strong> ${result.marks}</div>
-                </div>
-            </div>
-        `).join('');
-    } catch (error) {
-        document.getElementById('adminResults').innerHTML = '<p class="text-red-500">Error loading results</p>';
-    }
-}
-
-// Teacher: Add/Update result
-document.getElementById('resultForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const resultData = {
-        student_roll: document.getElementById('studentRollNo').value,
-        student_name: document.getElementById('studentName').value,
-        subject: document.getElementById('subject').value,
-        marks: parseInt(document.getElementById('marks').value)
-    };
-
-    try {
-        const response = await fetch(`${API_BASE}/results`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(resultData)
-        });
-
-        if (response.ok) {
-            alert('Result added successfully!');
-            e.target.reset();
-            loadAllResults();
-        } else {
-            alert('Error adding result');
-        }
-    } catch (error) {
-        alert('Error adding result');
-    }
+$('userTable').addEventListener('click', async e => {
+  const id = e.target.dataset.uid;
+  if (id && confirm('Remove this user?')){
+    try{ await api('/admin/users/' + id, {method:'DELETE'}); note('adminMsg','User removed.',true); loadAdmin(); }catch(err){ note('adminMsg', err.message); }
+  }
+});
+$('userForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  try{
+    await api('/admin/users', {method:'POST', body: JSON.stringify({role:$('uRole').value, user_id:$('uId').value.trim(), name:$('uName').value.trim(), password:$('uPw').value})});
+    note('adminMsg','User created.',true); e.target.reset(); loadAdmin();
+  }catch(err){ note('adminMsg', err.message); }
 });
 
-// Teacher: Add topic-wise marks
-document.getElementById('topicResultForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = {
-        student_roll: document.getElementById('topicRollNo').value,
-        subject: document.getElementById('topicSubject').value,
-        topic: document.getElementById('topicName').value,
-        marks: parseFloat(document.getElementById('topicMarks').value),
-        max_marks: parseFloat(document.getElementById('topicMaxMarks').value)
-    };
-    try {
-        const response = await fetch(`${API_BASE}/topic-results`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        if (response.ok) {
-            alert('Topic marks added!');
-            e.target.reset();
-        } else {
-            alert('Error adding topic marks');
-        }
-    } catch (error) {
-        alert('Error adding topic marks');
-    }
-});
-
-// Teacher: Delete result
-async function deleteResult(resultId) {
-    if (confirm('Are you sure you want to delete this result?')) {
-        try {
-            const response = await fetch(`${API_BASE}/results/${resultId}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                alert('Result deleted successfully!');
-                loadAllResults();
-            } else {
-                alert('Error deleting result');
-            }
-        } catch (error) {
-            alert('Error deleting result');
-        }
-    }
-}
-
-// Utility function to get grade
-function getGrade(marks) {
-    if (marks >= 90) return 'A+';
-    if (marks >= 80) return 'A';
-    if (marks >= 70) return 'B+';
-    if (marks >= 60) return 'B';
-    if (marks >= 50) return 'C';
-    return 'F';
-}
-
-// Initialize app
-showHome();
-    </script>
+/* ---------- restore session on reload ---------- */
+(async () => {
+  if (!store.token) return;
+  try{ user = await api('/auth/me'); enter(); }catch{ store.token = null; }
+})();
+</script>
 </body>
 </html>
