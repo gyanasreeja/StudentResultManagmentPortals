@@ -123,6 +123,17 @@ class AdminCreateUser(RegisterRequest):
     role: str = Field(pattern="^(student|teacher|admin)$")
 
 
+class PasswordReset(BaseModel):
+    password: str = Field(min_length=8, max_length=72)
+
+    @field_validator("password")
+    @classmethod
+    def strong(cls, v: str) -> str:
+        if not (any(c.isalpha() for c in v) and any(c.isdigit() for c in v)):
+            raise ValueError("Password must contain letters and numbers")
+        return v
+
+
 class LoginRequest(BaseModel):
     user_id: str
     password: str
@@ -283,6 +294,12 @@ def seed(db: Session) -> None:
     for uid, pw, role, name in defaults:
         if uid not in existing:
             db.add(User(user_id=uid, password=hash_password(pw), role=role, name=name))
+    # Emergency reset: set RESET_ADMIN_PASSWORD=1 for one deploy, then remove it.
+    if os.environ.get("RESET_ADMIN_PASSWORD") == "1":
+        admin = db.query(User).filter(User.user_id == "A001").first()
+        if admin:
+            admin.password = hash_password(ADMIN_PASSWORD)
+            admin.role, admin.is_active = "admin", True
     db.commit()
 
 
@@ -459,6 +476,17 @@ def create_user(body: AdminCreateUser, user: User = Depends(require_roles("admin
     db.commit()
     db.refresh(new)
     return new
+
+
+@app.put("/admin/users/{uid}/password")
+def reset_password(uid: int, body: PasswordReset, user: User = Depends(require_roles("admin")), db: Session = Depends(get_db)):
+    target = db.get(User, uid)
+    if not target:
+        raise HTTPException(404, "User not found")
+    target.password = hash_password(body.password)
+    target.is_active = True
+    db.commit()
+    return {"message": f"Password reset for {target.user_id}"}
 
 
 @app.delete("/admin/users/{uid}")

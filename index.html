@@ -264,13 +264,20 @@ async function loadAdmin(){
     const c = r => users.filter(u => u.role===r).length;
     $('adminStats').innerHTML = [['Students',c('student')],['Teachers',c('teacher')],['Administrators',c('admin')],['Results',results.length]].map(([l,n])=>`<div class="stat"><b>${n}</b><span>${l}</span></div>`).join('');
     $('userTable').innerHTML = `<table><thead><tr><th>ID</th><th>Name</th><th>Role</th><th></th></tr></thead><tbody>` +
-      users.map(u => `<tr><td>${esc(u.user_id)}</td><td>${esc(u.name)}</td><td><span class="pill">${esc(u.role)}</span></td><td>${u.user_id===user.user_id?'':`<button class="btn del sm" data-uid="${u.id}">Remove</button>`}</td></tr>`).join('') + '</tbody></table>';
+      users.map(u => `<tr><td>${esc(u.user_id)}</td><td>${esc(u.name)}</td><td><span class="pill">${esc(u.role)}</span></td><td><button class="btn lt sm" data-reset="${u.id}" data-name="${esc(u.user_id)}">Reset password</button> ${u.user_id===user.user_id?'':`<button class="btn del sm" data-uid="${u.id}">Remove</button>`}</td></tr>`).join('') + '</tbody></table>';
     $('logTable').innerHTML = logs.length ? `<table><thead><tr><th>User</th><th>Role</th><th>Outcome</th><th>Time</th></tr></thead><tbody>` +
       logs.map(l => `<tr><td>${esc(l.user_id)}</td><td>${esc(l.role)}</td><td><span class="pill ${l.success?'ok':'bad'}">${l.success?'Success':'Failed'}</span></td><td>${fmtDate(l.login_time)}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">No activity yet.</div>';
     $('adminResults').innerHTML = resultsTable(results, false);
   }catch(e){ note('adminMsg', e.message); }
 }
 $('userTable').addEventListener('click', async e => {
+  const rid = e.target.dataset.reset;
+  if (rid){
+    const pw = prompt('New password for ' + e.target.dataset.name + ' (8+ characters, letters and numbers):');
+    if (!pw) return;
+    try{ await api('/admin/users/' + rid + '/password', {method:'PUT', body: JSON.stringify({password: pw})}); note('adminMsg','Password updated for ' + e.target.dataset.name + '.',true); }catch(err){ note('adminMsg', err.message); }
+    return;
+  }
   const id = e.target.dataset.uid;
   if (id && confirm('Remove this user?')){
     try{ await api('/admin/users/' + id, {method:'DELETE'}); note('adminMsg','User removed.',true); loadAdmin(); }catch(err){ note('adminMsg', err.message); }
