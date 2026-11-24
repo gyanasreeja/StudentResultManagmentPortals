@@ -2,8 +2,8 @@
 
 A secure web portal where students, teachers and admins manage and view exam results. The system finds weak topics automatically, and an AI advisor (Groq Llama 3.3) writes a short, personalised study tip for each student.
 
-**Live demo:** https://YOUR-APP.onrender.com
-**Demo video:** https://YOUR-VIDEO-LINK
+**Live demo:**  https://studentresultmanagmentportals-08gb.onrender.com/
+**Demo video:**  https://drive.google.com/file/d/1frls_sik0psuhIeKqR9oI0Q9sMdarUa-/view?usp=sharing
 
 > The free Render plan sleeps after 15 minutes. The first load can take about a minute.
 
