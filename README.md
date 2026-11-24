@@ -1,85 +1,123 @@
-StudentResultManagmentPortal
+# Student Result Management Portal with AI Recommendations
 
-A comprehensive web-based portal for managing student results with role-based authentication and secure access control. Built with modern technologies for educational institutions. ✨ Features 🔐 Role-Based Authentication
+A secure web portal where students, teachers and admins manage and view exam results. The system finds weak topics automatically, and an AI advisor (Groq Llama 3.3) writes a short, personalised study tip for each student.
 
-Students: View personal results only (secure access) Teachers: Full CRUD operations on all student results Admin: System oversight with login monitoring
+**Live demo:** https://YOUR-APP.onrender.com
+**Demo video:** https://YOUR-VIDEO-LINK
 
-🎯 Core Functionalities
+> The free Render plan sleeps after 15 minutes. The first load can take about a minute.
 
-Secure Login System with password hashing (SHA-256) Real-time Result Management with instant updates Responsive Design - works on all devices Login Activity Tracking for administrative oversight Grade Calculation with automatic letter grade assignment
+## Features
+- Student registration and login with JWT tokens (60-minute expiry)
+- Passwords hashed with bcrypt
+- Role-based access control for student, teacher and admin
+- Teachers add, update and delete subject marks and enter topic-wise marks
+- Automatic grades (A+ to F), average and strongest subject
+- AI study advice: topics below 60% are flagged, then the LLM writes a tip
+- Admin dashboard: user management, password reset, statistics and login history (including failed attempts)
+- Seed script for 456 demo students with marks
 
-🛡️ Security Features
+## Users and Access
+| Role | Can do | Cannot do |
+|---|---|---|
+| Student | Register, view own results, grades and AI advice | See other students' data or change marks |
+| Teacher | Add, update and delete results, add topic marks, view all results | Manage users or view login logs |
+| Admin | Create, remove and reset users, view all results, stats and login logs | Edit marks |
 
-Password hashing and validation Role-based access control (RBAC) Session management Data isolation (students can only see their own results) Login activity logging with timestamps
+Teachers and admins are created by an admin. Public registration creates students only.
 
-🚀 Tech Stack Frontend
+## How It Works
+1. A student registers, then logs in by choosing a role, an ID and a password.
+2. The server checks the bcrypt hash and returns a JWT.
+3. Every request is checked by role. Students can open only their own roll number.
+4. A teacher saves subject marks and topic marks.
+5. Topics below 60% are marked weak. The system finds matching study material and asks the LLM for a short tip.
+6. The student dashboard shows results, grades, average and the AI advice.
 
-HTML5 - Semantic markup Tailwind CSS - Modern utility-first styling JavaScript (ES6+) - Interactive functionality Responsive Design - Mobile-first approach
+## Tech Stack
+- **Backend:** FastAPI, SQLAlchemy, PostgreSQL
+- **Security:** bcrypt, PyJWT
+- **AI:** LangChain, Groq (Llama 3.3)
+- **Frontend:** HTML, CSS, JavaScript
+- **Deployment:** Render
 
-Backend
+## Run Locally
+1. Clone the repo and set up the environment:
+   ```
+   git clone https://github.com/gyanasreeja/StudentResultManagmentPortals.git
+   cd StudentResultManagmentPortals
+   python -m venv venv
+   venv\Scripts\activate
+   python -m pip install -r requirements.txt
+   ```
+2. Create a PostgreSQL database named `student_portal_db`.
+3. Copy `.env.example` to `.env` and fill it in:
+   ```
+   DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@127.0.0.1:5432/student_portal_db
+   JWT_SECRET=a-long-random-string
+   GROQ_API_KEY=your_groq_key
+   ADMIN_PASSWORD=choose-a-strong-password
+   SEED_DEMO=0
+   ```
+4. Start the app and open http://localhost:8000:
+   ```
+   python main.py
+   ```
+5. Optional demo data (students S001 to S456 with marks, and teachers T001 to T003):
+   ```
+   python seed_456.py
+   ```
 
-FastAPI - High-performance Python web framework PostgreSQL - Robust relational database SQLAlchemy - Python SQL toolkit and ORM Uvicorn - ASGI web server
+## Demo Logins (after running the seed)
+| Role | ID | Password |
+|---|---|---|
+| Teacher | T001 | Teach@123 |
+| Student | S001 | stud@123 |
+| Admin | A001 | your ADMIN_PASSWORD |
 
-Additional Tools
+Change these before using the app for real.
 
-Pydantic - Data validation using Python type hints Hashlib - Secure password hashing CORS middleware - Cross-origin resource sharing HOME PAGE: image Student Dashboard image Teacher Dashboard image Admin DashBoard image Access the application
+## API Overview
+| Method | Endpoint | Access |
+|---|---|---|
+| POST | /auth/register | Public (students) |
+| POST | /auth/login | Public |
+| GET | /results/student/{roll} | Own roll, teacher, admin |
+| GET | /results/all | Teacher, admin |
+| POST, DELETE | /results | Teacher |
+| POST | /topic-results | Teacher |
+| GET | /ai/recommendations/{roll} | Own roll, teacher, admin |
+| GET, POST | /admin/users | Admin |
+| PUT | /admin/users/{id}/password | Admin |
+| GET | /admin/login-logs | Admin |
+
+Interactive API docs are at `/docs`.
+
+## Security
+- bcrypt password hashing and JWT bearer tokens
+- Server-side role checks on every endpoint, with per-student data isolation
+- Input validation with Pydantic
+- Output escaping in the frontend to prevent XSS
+- Secrets are kept in environment variables, and `.env` is not committed
+
+## Author
+Gyanasreeja Patnala
 
 Frontend: http://localhost:3000 Backend API: http://localhost:8000 API Documentation: http://localhost:8000/docs
-  Home Page:
-  <img width="1889" height="888" alt="Screenshot 2025-09-18 194006" src="https://github.com/user-attachments/assets/0b58d220-25e3-4ff8-89a4-c445b7ac96cf" />
-   
-  Student Dashboard:
-  <img width="1906" height="861" alt="Screenshot 2025-09-18 194112" src="https://github.com/user-attachments/assets/435cb163-03ba-47b0-ab0d-b8ea0cf6b1d8" />
-  Teacher Dashboard:
-  <img width="1854" height="876" alt="Screenshot 2025-09-18 194159" src="https://github.com/user-attachments/assets/6f605099-17e0-46ab-a31a-2e340a37b864" />
-
-  <img width="1902" height="873" alt="Screenshot 2025-09-18 122607" src="https://github.com/user-attachments/assets/f17bec75-956a-4285-809e-936a1d176d2f" />
-  Admin Dashbaord:
-  <img width="1865" height="879" alt="Screenshot 2025-09-18 194259" src="https://github.com/user-attachments/assets/ac52ea6e-aba5-40c1-9253-a1886ca95e94" />
-
-  
+ <img width="1919" height="921" alt="image" src="https://github.com/user-attachments/assets/e01ee7a8-6dd2-43dc-9470-c5c87469e457" />
+ <img width="1919" height="892" alt="image" src="https://github.com/user-attachments/assets/4895501e-be03-4799-8c20-6541453e1ec1" />
+ <img width="1802" height="923" alt="image" src="https://github.com/user-attachments/assets/8f86bfdf-fe52-44a7-989a-732e8792585e" />
+ <img width="1864" height="785" alt="image" src="https://github.com/user-attachments/assets/e4135ea2-bf1b-4084-9a67-e68a1815d736" />
+ Admin Dash Board :
+ <img width="1886" height="941" alt="image" src="https://github.com/user-attachments/assets/1e1648e5-c810-4096-9d57-7531d6e5b2bc" />
+ Teacher Dash Board:
+ <img width="1919" height="928" alt="image" src="https://github.com/user-attachments/assets/7d01a31c-4053-4e33-b8f6-b6c945b553e4" />
 
 
 
 
 
-👥 Default Login Credentials Students
 
-Roll Number: S001 | Password: pass123 Roll Number: S002 | Password: pass123
-
-Teacher
-
-Employee ID: T001 | Password: teach123
-
-Admin
-
-Admin ID: A001 | Password: admin123
-
-🔧 API Endpoints Authentication
-
-POST /login - User authentication for all roles
-
-Student Routes
-
-GET /results/student/{roll_number} - Get student's personal results Teacher Routes
-
-GET /results/all - Get all student results POST /results - Add new result PUT /results/{result_id} - Update existing result DELETE /results/{result_id} - Delete result
-
-Admin Routes
-
-GET /admin/login-logs - View login activity logs GET /admin/users - View all system users
-
-📊 Database Schema Users Table sqlCREATE TABLE users ( id SERIAL PRIMARY KEY, user_id VARCHAR(50) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(20) NOT NULL, name VARCHAR(100) NOT NULL ); Results Table sqlCREATE TABLE results ( id SERIAL PRIMARY KEY, student_roll VARCHAR(20) NOT NULL, student_name VARCHAR(100) NOT NULL, subject VARCHAR(100) NOT NULL, marks DECIMAL(5,2) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ); Login Logs Table sqlCREATE TABLE login_logs ( id SERIAL PRIMARY KEY, user_id VARCHAR(50) NOT NULL, role VARCHAR(20) NOT NULL, login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ); 🎯 Use Cases For Educational Institutions
-
-Schools - Manage student grades and results Colleges - Semester result management Training Centers - Course completion tracking Coaching Centers - Student performance monitoring
-
-Key Benefits
-
-Paperless System - Reduce manual paperwork Instant Access - Students get results immediately Secure Data - Role-based access ensures data privacy Audit Trail - Complete login and activity tracking Scalable - Handles multiple subjects and students
-
-🔒 Security Considerations
-
-Password Hashing: SHA-256 encryption for all passwords Role Validation: Server-side role verification for all endpoints Data Isolation: Students can only access their own data Input Validation: Comprehensive data validation using Pydantic SQL Injection Protection: SQLAlchemy ORM prevents SQL injection CORS Configuration: Controlled cross-origin resource sharing
 
 <img width="5929" height="6728" alt="diagram" src="https://github.com/user-attachments/assets/a17a9459-d464-485a-ab95-13041ab08135" />
 
